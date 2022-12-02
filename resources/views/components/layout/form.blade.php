@@ -21,7 +21,7 @@
                 @endphp
                 <div class="form-group">
                     <label for="titulo">Titulo Layout</label>
-                    <input id="titulo" name="titulo" placeholder="Titulo" type="text" required="required" class="form-control" @isset($layout->titulo)value="{{$layout->titulo}}"@endisset >
+                    <input id="titulo" name="titulo" placeholder="Titulo" type="text" required="required" class="form-control"  @if(isset($layout->titulo))value="{{$layout->titulo}}"@else @empty(!old()) value="{{old('titulo')}}" @endempty @endif >
                 </div>
 
                 @isset($layout)
@@ -51,11 +51,13 @@
                     <x-layout.listas.ul :sessoesLayout="$layout->sessoesLayout" />
                 </div>
                 <br>
+                <div id="order_sessao">
+                </div>
 
                 @endisset
                 <div class="form-group">
                     <a href="{{route('layout.index')}}" class="btn btn-primary">Voltar</a>
-                    <button name="submit" type="submit" class="btn btn-success">Salvar</button>
+                    <button name="submit" type="submit" class="btn btn-success salvar">Salvar</button>
                 </div>
             </form>
         </div>
