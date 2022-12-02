@@ -14,8 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('layout_sessao', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedTinyInteger('order_sessao')->nullable(true);
             $table->unsignedBigInteger('layout_id');
-            $table->foreign('layout_id')->references('id')->on('layout');
+            $table->foreign('layout_id')->references('id')->on('layouts');
             $table->unsignedBigInteger('sessao_id');
             $table->foreign('sessao_id')->references('id')->on('sessao');
             $table->timestamps();

@@ -9,7 +9,7 @@ class Layout extends Model
 {
     use HasFactory;
     protected $fillable = ['titulo'];
-    protected $table = 'layout';
+    protected $table = 'layouts';
 
     public function sessao()
     {

@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('layout_sessao', function (Blueprint $table) {
-            $table->foreignId('layout_id')->constrained();
-            $table->foreignId('sessao_id')->constrained();
+        Schema::create('layouts', function (Blueprint $table) {
+            $table->id();
+            $table->string('titulo')->unique()->nullable(true);
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('layout_sessao');
+        Schema::dropIfExists('layout');
     }
 };

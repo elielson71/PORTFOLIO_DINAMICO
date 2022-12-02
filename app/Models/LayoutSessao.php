@@ -9,4 +9,5 @@ class LayoutSessao extends Model
 {
     use HasFactory;
     protected $table = 'layout_sessao';
+    protected $fillable = ['id','order_sessao','layout_id','sessao_id'];
 }

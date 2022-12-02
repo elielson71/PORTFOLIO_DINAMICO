@@ -41,7 +41,7 @@ class LayoutController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(LayoutRequest $request)
     {
         Layout::create($request->all());
         return to_route('layout.index')->with('message.sucesso', "Layout '{$request->titulo}'Salva com Sucesso!");
@@ -75,7 +75,7 @@ class LayoutController extends Controller
         $idFilter = filter_var($id);
         $sessao = DB::select('select * from sessao s where s.id not in ( SELECT sessao_id from layout_sessao ls where ls.layout_id = ?)', [$idFilter]);
 
-        $sessoesLayout = $layout->sessao()->get();
+        $sessoesLayout = $layout->sessao()->orderByPivot('order_sessao')->get();
         $layout['sessoesLayout'] = $sessoesLayout;
         $layout['sessoes'] = $sessao;
         return view('\layout\edit')
@@ -85,6 +85,16 @@ class LayoutController extends Controller
 
     public function update(Layout $layout, LayoutRequest $request)
     {
+        foreach($request->order as $key => $order){
+
+            $ls = LayoutSessao::where('layout_id',$layout->id)->where('sessao_id',$order)->get();
+            $layoutSessao = new  LayoutSessao();
+            $array = $ls->toArray();
+            $array[0]['order_sessao'] = $key;
+            $layoutSessao->exists =true;
+            $layoutSessao->update($array[0]);
+
+        }
         $layout->fill($request->all());
         $layout->save();
 
@@ -102,34 +112,5 @@ class LayoutController extends Controller
     {
         $layout->delete();
         return to_route('layout.index')->with('message.sucesso', "Layout '{$layout->titulo}' Excluída com Sucesso!");
-    }
-
-    public function storeSessaoLauout(Request $request)
-    {
-        $layout = Layout::find($request->layout_id);
-        $layout->sessao()->attach($request->sessao_id);
-
-        $layouts['sessoesLayout'] = $layout->sessao()->get();
-
-        return  json_encode(''.view('\components\layout\listas\ul', ['layout' => $layouts]).'');
-
-    }
-
-    public function destroySessaoLayout(Request $request)
-    {
-        $layout = Layout::find($request->layout_id);
-        $layout->sessao()->detach($request->sessao_id);
-    }
-
-
-    public function updateSessaoLayout(Request $request)
-    {
-        $layout = Layout::find($request->layout_id);
-        $layout->sessao()->updateExistingPivot($request->sessao_id);
-    }
-
-    private function objectToArray(&$object)
-    {
-        return @json_decode(json_encode($object), true);
     }
 }
