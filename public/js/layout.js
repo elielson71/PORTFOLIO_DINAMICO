@@ -13,14 +13,22 @@ $(document).ready(function () {
 
     })
 
+    $('.salvar').on('click', function(){
+        $('#order_sessao').html('');
+        $('.sessions li').each(function(pos, el){
+            $('#order_sessao').append('<input type="hidden" name="order['+pos+']" value='+$(el).find('#id_sessao_list').val()+'>');
+        })
+    })
+
 
     function ajaxLayoutSessao(event, sessao_id, layout_id, type = 'POST') {
         var token = $('.token input').val();
-        var url = $(event.target).attr('url')
+        var url = $(event.target).attr('url');
+        var order_sessao = type=='POST'?$('.sessions li').length+1:0;
         $.ajax({
             type: type,
             url: url,
-            data: { "_token": token, "sessao_id": sessao_id, "layout_id": layout_id },
+            data: { "_token": token, "sessao_id": sessao_id, "layout_id": layout_id,'order_sessao':order_sessao },
             dataType: 'json'
         }).done(function (data) {
             if(data){
