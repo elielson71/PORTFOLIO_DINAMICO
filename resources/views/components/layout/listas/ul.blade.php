@@ -13,8 +13,9 @@
 <div class="card">
     <ul class="list-group list-group-flush sessions">
         @foreach ($sessoesLayout as $key => $s)
-        <input type="hidden" id="id_sessao_list" value="{{$s->id}}">
-        <li class="list-group-item d-flex">
+        <li class="list-group-item d-flex " order="{{$key}}">
+            <input type="hidden" id="id_sessao_list" value="{{$s->id}}">
+
             <h2 class="p-2 flex-grow-1">
                 {{$s->titulo}}
             </h2>
@@ -23,9 +24,9 @@
                     <a href="{{route('sessao.editar',$s->id)}}" class="btn btn-primary p-2">Editar</a>
                 </div>
                 <div>
-                    <a class="btn btn-danger" id = "destroysessaolayout" url="{{route('layoutsessao.destroy',$s->id)}}" data-id="{{$s->id}}">
+                    <a class="btn btn-danger" id="destroysessaolayout" url="{{route('layoutsessao.destroy',$s->id)}}" data-id="{{$s->id}}">
                         Excluir
-</a>
+                    </a>
                 </div>
             </div>
         </li>
