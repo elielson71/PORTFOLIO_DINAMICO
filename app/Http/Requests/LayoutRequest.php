@@ -23,9 +23,29 @@ class LayoutRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'titulo' => 'bail|required|unique:layouts|max:255',
+        $rule = [
+            'titulo' => [
+                'bail',
+                'required',
+                "unique:layouts",
+                'max:255'
+            ]
         ];
+
+        if ($this->method()=='PUT') {
+            $id = $this->layout->id;
+            $rule = [
+                'titulo' => [
+                    'bail',
+                    'required',
+                    "unique:layouts,titulo,{$id},id",
+                    'max:255'
+                ]
+            ];
+
+        }
+
+        return $rule;
     }
 
     public function messages()
