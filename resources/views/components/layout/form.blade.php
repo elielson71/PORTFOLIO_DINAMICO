@@ -21,7 +21,7 @@
                 @endphp
                 <div class="form-group">
                     <label for="titulo">Titulo Layout</label>
-                    <input id="titulo" name="titulo" placeholder="Titulo" type="text" required="required" class="form-control"  @if(isset($layout->titulo))value="{{$layout->titulo}}"@else @empty(!old()) value="{{old('titulo')}}" @endempty @endif >
+                    <input id="titulo" name="titulo" placeholder="Titulo" type="text" required="required" class="form-control" @if(isset($layout->titulo))value="{{$layout->titulo}}"@else @empty(!old()) value="{{old('titulo')}}" @endempty @endif >
                 </div>
 
                 @isset($layout)
@@ -40,7 +40,7 @@
                             </div>
                             <div class="col-2">
                                 <button id="addsessaolayout" class="btn btn-success" url="{{route('layoutsessao.store')}}">
-                                    add
+                                    <i class="fa-solid fa-circle-plus"></i>
                                 </button>
                             </div>
                         </div>

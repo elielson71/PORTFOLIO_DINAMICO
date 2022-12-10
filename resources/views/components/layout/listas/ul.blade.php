@@ -15,17 +15,19 @@
         @foreach ($sessoesLayout as $key => $s)
         <li class="list-group-item d-flex " order="{{$key}}">
             <input type="hidden" id="id_sessao_list" value="{{$s->id}}">
-
+            <div class="p-3">
+                <i class="fa-solid fa-bars"></i>
+            </div>
             <h2 class="p-2 flex-grow-1">
                 {{$s->titulo}}
             </h2>
             <div class="d-flex justify-content-between">
-                <div>
-                    <a href="{{route('sessao.editar',$s->id)}}" class="btn btn-primary p-2">Editar</a>
+                <div class="mt-2 p-1">
+                    <a href="{{route('sessao.editar',$s->id)}}" class="btn btn-primary p-2"><i class="fa-solid fa-pen-to-square"></i></a>
                 </div>
-                <div>
-                    <a class="btn btn-danger" id="destroysessaolayout" url="{{route('layoutsessao.destroy',$s->id)}}" data-id="{{$s->id}}">
-                        Excluir
+                <div class="mt-2 p-1">
+                    <a class="btn btn-danger p-2" id="destroysessaolayout" url="{{route('layoutsessao.destroy',$s->id)}}" data-id="{{$s->id}}">
+                        <i class="fa-regular fa-trash"></i>
                     </a>
                 </div>
             </div>
