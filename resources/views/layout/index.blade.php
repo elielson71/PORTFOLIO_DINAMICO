@@ -14,7 +14,6 @@
                     <thead>
                         <th>ID</th>
                         <th>Titulo</th>
-                        <th>Conceudo</th>
                         <th>Ação</th>
                     </thead>
                     <tbody>
@@ -23,7 +22,6 @@
                         <tr>
                             <td>{{$key+1}}</td>
                             <td>{{$s->titulo}}</td>
-                            <td>{{$s->conteudo}}</td>
                             <td class="d-flex ">
                                 <a href=""></a>
                                 <a href="{{route('layout.edit',$s->id)}}" class="btn btn-primary">Editar</a>

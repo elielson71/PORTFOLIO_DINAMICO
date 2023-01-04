@@ -4,6 +4,8 @@ use App\Http\Controllers\LayoutController;
 use App\Http\Controllers\LayoutSessaoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SessaoController;
+use App\Http\Controllers\SettingsSiteController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,20 +18,22 @@ use App\Http\Controllers\SessaoController;
 */
 
 Route::get('/', function () {
-    return view('paginaInicial');
+    redirect(route('settings.create'));
 });
 
-Route::controller(SessaoController::class)->group(function () {
-    Route::get('/sessao', 'index')->name('sessao.index');
-    Route::get('/sessao/create', 'create')->name('sessao.criar');
-    Route::get('/sessao/edit/{id}/edit', 'edit')->name('sessao.editar');
-    Route::put('/sessao/update/{id}', 'update')->name('sessao.atualizar');
-    Route::post('/sessao/store', 'store')->name('sessao.salvar');
-    Route::delete('/sessao/destroy/{sessao}', 'destroy')->name('sessao.excluir');
-});
-
-Route::resource('/layout', LayoutController::class)
+Route::resource('/settings', SettingsSiteController::class)
     ->except(['show']);
 
+    Route::resource('/layout', LayoutController::class)
+    ->except(['show']);
+
+    Route::controller(SessaoController::class)->group(function () {
+        Route::get('/sessao', 'index')->name('sessao.index');
+        Route::get('/sessao/create', 'create')->name('sessao.criar');
+        Route::get('/sessao/edit/{id}/edit', 'edit')->name('sessao.editar');
+        Route::put('/sessao/update/{id}', 'update')->name('sessao.atualizar');
+        Route::post('/sessao/store', 'store')->name('sessao.salvar');
+        Route::delete('/sessao/destroy/{sessao}', 'destroy')->name('sessao.excluir');
+    });
 Route::resource('/layoutsessao', LayoutSessaoController::class)
     ->only('store','destroy','update');

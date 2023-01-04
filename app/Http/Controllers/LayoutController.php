@@ -5,13 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LayoutRequest;
 use App\Models\Layout;
 use App\Models\LayoutSessao;
-use App\Models\Sessao;
-use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Services\LayoutService;
+
 
 class LayoutController extends Controller
 {
+    /**
+     * Serviço do Layout
+     *
+     * @var LayoutService
+     */
+    private $layoutService;
+
+    public function __construct(LayoutService $layoutService)
+    {
+        $this->layoutService = $layoutService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +28,7 @@ class LayoutController extends Controller
      */
     public function index()
     {
-        $layouts = Layout::all();
+        $layouts = $this->layoutService->getAll();
         $mensagem =  session('message.sucesso');
 
         return view('\layout\index', ['layouts' => $layouts, 'mensagem' => $mensagem]);
@@ -43,9 +52,9 @@ class LayoutController extends Controller
      */
     public function store(LayoutRequest $request)
     {
-        Layout::create($request->all());
-        return to_route('layout.index')->with('message.sucesso', "Layout '{$request->titulo}'Salva com Sucesso!");
 
+        $this->layoutService->createLayout($request->all());
+        return to_route('layout.index')->with('message.sucesso', "Layout '{$request->titulo}'Salva com Sucesso!");
     }
 
     /**
@@ -67,17 +76,7 @@ class LayoutController extends Controller
      */
     public function edit(Layout $layout)
     {
-        $id = $layout->id;
-
-        // $sessao = Sessao::whereDoesntHave('layout', function (Builder $query) {
-        //     $query->where('layout_id',$id);
-        // })->get();
-        $idFilter = filter_var($id);
-        $sessao = DB::select('select * from sessao s where s.id not in ( SELECT sessao_id from layout_sessao ls where ls.layout_id = ?)', [$idFilter]);
-
-        $sessoesLayout = $layout->sessao()->orderByPivot('order_sessao')->get();
-        $layout['sessoesLayout'] = $sessoesLayout;
-        $layout['sessoes'] = $sessao;
+        $this->layoutService->getLayoutSessao($layout);
         return view('\layout\edit')
             ->with('layout', $layout);
     }
@@ -85,21 +84,9 @@ class LayoutController extends Controller
 
     public function update(Layout $layout, LayoutRequest $request)
     {
-        foreach($request->order as $key => $order){
 
-            $ls = LayoutSessao::where('layout_id',$layout->id)->where('sessao_id',$order)->get();
-            $layoutSessao = new  LayoutSessao();
-            $array = $ls->toArray();
-            $array[0]['order_sessao'] = $key;
-            $layoutSessao->exists =true;
-            $layoutSessao->update($array[0]);
-
-        }
-        $layout->fill($request->all());
-        $layout->save();
-
+        $this->layoutService->getLayoutSessao($layout,$request);
         return to_route('layout.index')->with('message.sucesso', "Layout '{$request->titulo}' Atualizada com Sucesso!");
-
     }
 
     /**
